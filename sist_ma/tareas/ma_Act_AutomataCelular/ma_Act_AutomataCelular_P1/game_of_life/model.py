@@ -42,23 +42,21 @@ class ConwaysGameOfLife(Model):
                 cell,   # celda 
                 init_state=init_state,
             )
-            # Acceso rápido por coordenadas
+            # Acceso rápido a los agentes en base a las coordenadas.
             self.cell_grid[(x, y)] = agent
 
         self.running = True
 
 
     def step(self):
-        # Detener la simulacion cuando se llegue a la fila 0
+        # Detener cuando la simulacion cuando llegue a la fila 0
         if self.current_row <= 0:
             self.running = False
             return
 
-        width = self.grid.width
-        
-        # Actualizar la fila actual
+        width = self.grid.width # Ancho del grid
 
-        next_row = self.current_row - 1
+        next_row = self.current_row - 1 # La siguiente fila a actualizar
 
         # Primero determinar el estado de la siguiente fila
         for x in range(width):
@@ -70,5 +68,5 @@ class ConwaysGameOfLife(Model):
             next_agent = self.cell_grid[(x, next_row)]
             next_agent.assume_state()
 
-        self.current_row = next_row
+        self.current_row = next_row # Moverse a la siguiente fila hacia abajo
 
