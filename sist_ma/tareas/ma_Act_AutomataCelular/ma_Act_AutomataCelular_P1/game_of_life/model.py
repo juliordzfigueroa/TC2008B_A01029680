@@ -57,7 +57,7 @@ class ConwaysGameOfLife(Model):
         width = self.grid.width
         
         # Actualizar la fila actual
-        previous_row = self.current_row
+
         next_row = self.current_row - 1
 
         # Primero determinar el estado de la siguiente fila

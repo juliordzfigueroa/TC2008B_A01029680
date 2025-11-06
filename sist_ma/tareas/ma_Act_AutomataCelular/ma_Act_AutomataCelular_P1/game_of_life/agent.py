@@ -45,7 +45,7 @@ class Cell(FixedAgent): # La clase de celula esta heredando los comportamientos 
         # Assume nextState is unchanged, unless changed below.
         self._next_state = self.state
 
-        # Creamos variables booleanas para revisar si los vecinos de arriba estan vivos o muertos
+        # Creamos variables booleanas para revisar si los vecinos de arriba estan vivos o muertos, tomando True como vivos y False como muertos
         a0 = getattr(top_neighbors[0], 'is_alive', False)
         a1 = getattr(top_neighbors[1], 'is_alive', False)
         a2 = getattr(top_neighbors[2], 'is_alive', False)
@@ -70,13 +70,13 @@ class Cell(FixedAgent): # La clase de celula esta heredando los comportamientos 
 
     def assume_state(self):
         """Set the state to the new computed state -- computed in step()."""
-        if self._next_state is not None:
-            self.state = self._next_state
-            self._next_state = None
+        if self._next_state is not None: # Si siguiente estado es diferente a None
+            self.state = self._next_state # Actualiza el estado actual al siguiente estado
+            self._next_state = None # Reinicia el siguiente estado a None
 
     def get_UpNeighbors(self):
         """Regresa los 3 vecinos de arriba de la celda actual"""
-        neighbors = self.neighbors
+        neighbors = self.neighbors # Calulamos los vecinos de la celda actual
         top_neighbors = [None, None, None] # Inicializa la lista de vecinos de arriba
 
         # Usar modulo para considerar el grid con el torus solo de manera vertical.
@@ -85,15 +85,16 @@ class Cell(FixedAgent): # La clase de celula esta heredando los comportamientos 
 
         target_y = (self.y + 1) % height # La fila de arriba
 
+        # Si la fila de arriba esta fuera del grid 
         if target_y >= height:
             return top_neighbors
-    
-        left_x = self.x - 1
 
-        mid_x = self.x % width
-        right_x = self.x + 1
+        # Simulamos el tourus horizontal para los bordes
+        left_x = (self.x - 1) % width
+        mid_x = self.x
+        right_x = (self.x + 1) % width
 
-        # Revisamos cada vecino para ver si pertenece a la fila de arriba
+        # Revisamos todos los vecinos de la celda actual para ver cuales estan en la parte de arriba.
         for neighbor in neighbors:
             nx, ny = neighbor.cell.coordinate
             if ny == target_y and nx == left_x:
