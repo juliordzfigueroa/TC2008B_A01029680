@@ -24,24 +24,51 @@ class ConwaysGameOfLife(Model):
 
         # Place a cell at each location, with some initialized to
         # ALIVE and some to DEAD.
+        # Solo para la primera fila de celdas en la simulación.
+
+        self.cell_grid = {}
+
+        self.current_row = height - 1  # Comenzar desde la ultima fila (height - 1)
+
         for cell in self.grid.all_cells:
-            Cell(
-                self,
-                cell,
-                init_state=(
-                    Cell.ALIVE
-                    if self.random.random() < initial_fraction_alive
-                    else Cell.DEAD
-                ),
+            x, y = cell.coordinate
+            init_state = (
+                Cell.ALIVE
+                if (y == self.current_row and self.random.random() < initial_fraction_alive) # Solo la fila inicial
+                else Cell.DEAD
             )
+            agent = Cell(
+                self,   # modelo
+                cell,   # celda 
+                init_state=init_state,
+            )
+            # Acceso rápido por coordenadas
+            self.cell_grid[(x, y)] = agent
 
         self.running = True
 
-    def step(self):
-        """Perform the model step in two stages:
 
-        - First, all cells assume their next state (whether they will be dead or alive)
-        - Then, all cells change state to their next state.
-        """
-        self.agents.do("determine_state")
-        self.agents.do("assume_state")
+    def step(self):
+        # Detener la simulacion cuando se llegue a la fila 0
+        if self.current_row <= 0:
+            self.running = False
+            return
+
+        width = self.grid.width
+        
+        # Actualizar la fila actual
+        previous_row = self.current_row
+        next_row = self.current_row - 1
+
+        # Primero determinar el estado de la siguiente fila
+        for x in range(width):
+            next_agent = self.cell_grid[(x, next_row)]
+            next_agent.determine_state()
+
+        # Ahora actualizar el estado de la siguiente fila
+        for x in range(width):
+            next_agent = self.cell_grid[(x, next_row)]
+            next_agent.assume_state()
+
+        self.current_row = next_row
+

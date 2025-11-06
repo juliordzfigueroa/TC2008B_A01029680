@@ -1,4 +1,4 @@
-# from game_of_life.model import ConwaysGameOfLife
+from game_of_life.model import ConwaysGameOfLife
 from mesa.visualization import (
     SolaraViz,
     make_space_component,

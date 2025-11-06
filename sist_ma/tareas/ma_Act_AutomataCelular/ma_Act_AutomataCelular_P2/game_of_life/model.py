@@ -24,6 +24,12 @@ class ConwaysGameOfLife(Model):
 
         # Place a cell at each location, with some initialized to
         # ALIVE and some to DEAD.
+        # Solo para la primera fila de celdas en la simulación.
+
+        self.cell_grid = {}
+
+        self.current_row = height - 1  # Comenzar desde la ultima fila (height - 1)
+
         for cell in self.grid.all_cells:
             Cell(
                 self,
@@ -37,11 +43,8 @@ class ConwaysGameOfLife(Model):
 
         self.running = True
 
-    def step(self):
-        """Perform the model step in two stages:
 
-        - First, all cells assume their next state (whether they will be dead or alive)
-        - Then, all cells change state to their next state.
-        """
+    def step(self):
+        # Realizar el paso del modelo en dos etapas:
         self.agents.do("determine_state")
         self.agents.do("assume_state")
